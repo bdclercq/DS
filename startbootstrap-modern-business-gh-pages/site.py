@@ -1,0 +1,40 @@
+from flask import Flask, render_template
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def homepage():
+	title = "Epic Tutorials"
+	paragraph = [
+		"wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!",
+		"wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!wow I am learning so much great stuff!"]
+
+	try:
+		return render_template("index.html")
+	except Exception as e:
+		return str(e)
+
+#
+# @app.route('/about')
+# def aboutpage():
+# 	title = "About this site"
+# 	paragraph = ["blah blah blah memememememmeme blah blah memememe"]
+#
+# 	pageType = 'about'
+#
+# 	return render_template("index.html")
+#
+#
+# @app.route('/about/contact')
+# def contactPage():
+# 	title = "About this site"
+# 	paragraph = ["blah blah blah memememememmeme blah blah memememe"]
+#
+# 	pageType = 'about'
+#
+# 	return render_template("index.html")
+
+
+if __name__ == "__main__":
+	app.run()
