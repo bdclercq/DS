@@ -18,8 +18,8 @@
 
     <style>
         #map {
-                width: 960px;
-                height: 500px;
+                width: 1000px;
+                height: 550px;
                 display: block;
                 margin-left: auto;
                 margin-right: auto;
@@ -52,7 +52,6 @@
                   center: [51.219448, 4.402464],
                   zoom: 25
                   });
-
                   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                   attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   }).addTo(map);
@@ -65,54 +64,6 @@
       <h1 class="my-4">Let's start</h1>
 
       <!-- Marketing Icons Section -->
-      <script>
-        function getLines(province){
-        alert("Following lines are available in "+province+":");
-        var request = new XMLHttpRequest();
-
-        var prov_id = "";
-
-        if(province==='Antwerp'){
-            prov_id = 2;
-        }
-        else if(province==='East-Flanders'){
-            prov_id = 3;
-        }
-        else if(province==='West-Flanders'){
-            prov_id = 1;
-        }
-        else if(province==='Flemish-Brabant'){
-            prov_id = 4;
-        }
-        else if(province==='Limburg'){
-            prov_id = 5;
-        }
-        $(function(prov_id) {
-        var params = {
-            // Request parameters
-	        prov_id
-        };
-
-        $.ajax({
-            url: "https://delijn.azure-api.net/DLKernOpenData/v1/beta/entiteiten/{entiteitnummer}/lijnen?" + $.param(params),
-            beforeSend: function(xhrObj){
-                // Request headers
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key","a80d6af91407478c91c8288afd85452f");
-            },
-            type: "GET",
-            // Request body
-            data: "{body}",
-        })
-        .done(function(data) {
-            alert("success");
-        })
-        .fail(function() {
-            alert("error");
-        });
-    });
-        }
-
-      </script>
 
       <div class="row">
         <div class="col-lg-4 mb-4">
@@ -120,11 +71,14 @@
             <h4 class="card-header">Which province?</h4>
             <div class="card-body">
               <p class="card-text">
-                <a href="#" onClick="getLines('Antwerp')">Antwerp</a><br>
-                <a href="#" onClick="getLines('East-Flanders')">East-Flanders</a><br>
-                <a href="#" onClick="getLines('West-Flanders')">West-Flanders</a><br>
-                <a href="#" onClick="getLines('Flemish-Brabant')">Flemish-Brabant</a><br>
-                <a href="#" onClick="getLines('Limburg')">Limburg</a><br>
+                {% if lijnen %}
+    {% for lijn in lijnen.lijnen %}
+        <li>{{ lijn.lijnnummer }}</a> {{ lijn.omschrijving}}</li>
+    {% endfor %}
+
+{% else %}
+  <h1>Oops, something went wrong</h1>
+{% endif %}
               </p>
             </div>
             <!--<div class="card-footer">-->
