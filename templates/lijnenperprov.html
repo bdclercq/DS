@@ -42,7 +42,8 @@
                         {% if lijnen %}
                         <form>
                             <label for="lijnen">Available lines</label>
-                            <select id="lijnen" style="color:#383838; font-size: 32pt; background:#CEBC77" size="1">
+                            <select id="lijnen" style="color:#383838; font-size: 28pt; background:#CEBC77" size="1">
+                                <option value="">---SELECT---</option>
                                 {% for lijn in lijnen.lijnen %}
                                 <option value={{lijn.lijnnummer}}>
 

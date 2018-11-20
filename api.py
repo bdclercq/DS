@@ -77,32 +77,18 @@ def lijnRegeling(provincie, lijnnr):
 @app.route('/<provincie>/lijnen/<lijnnr>/to/')
 def lijnRegelingHeen(provincie, lijnnr):
     conn = http.client.HTTPSConnection('delijn.azure-api.net')
-    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/HEEN/real-time".format(provincie, lijnnr),
+    conn.request("GET",
+                 "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/HEEN/real-time".format(provincie, lijnnr),
                  "{body}", headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
-    return render_template('onMap.html', data=json.loads(data))
-
-@app.route('/<provincie>/lijnen/<lijnnr>/from/')
-def lijnRegelingTerug(provincie, lijnnr):
-    conn = http.client.HTTPSConnection('delijn.azure-api.net')
-    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/TERUG/real-time".format(provincie, lijnnr),
-                 "{body}", headers)
-    response = conn.getresponse()
-    data = response.read()
-    conn.close()
-    data=json.loads(data)
-    ritten = {}
-    for i in range(len(data["ritDoorkomsten"])-1):
+    data = json.loads(data)
+    haltes = {}
+    for i in range(len(data["ritDoorkomsten"]) - 1):
         rit = data["ritDoorkomsten"][i]
-        ritnr = rit['ritnummer']
-        # print(ritnr)
-        # print(len(rit["doorkomsten"]))
-        ritten[ritnr] = {}
         # Doorkomsten verwerken
-        for j in range(len(rit["doorkomsten"])-1):
-            # print(rit["doorkomsten"][j]["haltenummer"])
+        for j in range(len(rit["doorkomsten"]) - 1):
             halte = rit["doorkomsten"][j]["haltenummer"]
             # Locaties verwerken, nieuwe query
             conn = http.client.HTTPSConnection('delijn.azure-api.net')
@@ -115,15 +101,53 @@ def lijnRegelingTerug(provincie, lijnnr):
             halteData = json.loads(halteData)
             lati = halteData["geoCoordinaat"]["latitude"]
             longi = halteData["geoCoordinaat"]["longitude"]
-            # # print(lati, longi)
+            name = halteData["omschrijving"]
 
             tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
-            ritten[ritnr][halte] = {}
-            ritten[ritnr][halte]["time"] = tijdstip
-            ritten[ritnr][halte]["lati"] = lati
-            ritten[ritnr][halte]["longi"] = longi
-            # print(tijdstip)
-    return render_template('onMap.html', data=data, ritten=ritten)
+            if name not in haltes:
+                haltes[name] = {}
+                haltes[name]["time"] = []
+            haltes[name]["time"].append(tijdstip)
+            haltes[name]["lati"] = lati
+            haltes[name]["longi"] = longi
+    return render_template('onMap.html', haltes=haltes)
+
+@app.route('/<provincie>/lijnen/<lijnnr>/from/')
+def lijnRegelingTerug(provincie, lijnnr):
+    conn = http.client.HTTPSConnection('delijn.azure-api.net')
+    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/TERUG/real-time".format(provincie, lijnnr),
+                 "{body}", headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+    data=json.loads(data)
+    haltes = {}
+    for i in range(len(data["ritDoorkomsten"])-1):
+        rit = data["ritDoorkomsten"][i]
+        # Doorkomsten verwerken
+        for j in range(len(rit["doorkomsten"])-1):
+            halte = rit["doorkomsten"][j]["haltenummer"]
+            # Locaties verwerken, nieuwe query
+            conn = http.client.HTTPSConnection('delijn.azure-api.net')
+            conn.request("GET",
+                         "/DLKernOpenData/v1/beta/haltes/{0}/{1}".format(provincie, halte),
+                         "{body}", headers)
+            response = conn.getresponse()
+            halteData = response.read()
+            conn.close()
+            halteData = json.loads(halteData)
+            lati = halteData["geoCoordinaat"]["latitude"]
+            longi = halteData["geoCoordinaat"]["longitude"]
+            name = halteData["omschrijving"]
+
+            tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
+            if name not in haltes:
+                haltes[name] = {}
+                haltes[name]["time"] = []
+            haltes[name]["time"].append(tijdstip)
+            haltes[name]["lati"] = lati
+            haltes[name]["longi"] = longi
+    return render_template('onMap.html', haltes=haltes)
 
 class Welcome(Resource):
     def get(self):
