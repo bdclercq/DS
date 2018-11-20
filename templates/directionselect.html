@@ -39,15 +39,28 @@
             <div class="col-lg-7 my-auto">
                 <div class="header-content mx-auto">
                     <h1 class="mb-5">
-                        {% if entiteiten %}
-                        {% for prov in entiteiten.entiteiten %}
-                            <a href="{{ url_for('lijnen', provincie=prov.entiteitnummer)}}">{{ prov.omschrijving}}</a><br>
-                        {% endfor %}
 
-                        {% else %}
-                        <h1>Oops, something went wrong</h1>
-                        {% endif %}
+                        <h2>{{data.lijnnummer}}</h2>
+                        {{data.omschrijving}}
+
                     </h1>
+                    <form>
+                        <label for="directions">Direction</label>
+                        <select id="directions" style="color:#383838; font-size: 16pt; background:#CEBC77" size="1">
+                            <option value="">---SELECT---</option>
+                            <option value="to"> To</option>
+                            <option value="from"> From</option>
+                        </select>
+                    </form>
+                    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $("#directions").change(function () {
+                                var address = $(this).val();
+                                window.location.replace(address);
+                            });
+                        });
+                    </script>
                 </div>
             </div>
         </div>

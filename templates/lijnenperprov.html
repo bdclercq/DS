@@ -40,11 +40,27 @@
                 <div class="header-content mx-auto">
                     <h1 class="mb-5">
                         {% if lijnen %}
-                        <select>
-                            {% for lijn in lijnen.lijnen %}
-                            <option value="lijn.omschrijving">{{ lijn.lijnnummer }}</a> {{ lijn.omschrijving}}</option>
-                            {% endfor %}
-                        </select>
+                        <form>
+                            <label for="lijnen">Available lines</label>
+                            <select id="lijnen" style="color:#383838; font-size: 32pt; background:#CEBC77" size="1">
+                                {% for lijn in lijnen.lijnen %}
+                                <option value={{lijn.lijnnummer}}>
+
+                                    {{ lijn.lijnnummer }} {{ lijn.omschrijving}}
+
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("#lijnen").change(function () {
+                                    var address = $(this).val();
+                                    window.location.replace(address);
+                                });
+                            });
+                        </script>
                         {% else %}
                         <h1>Oops, something went wrong</h1>
                         {% endif %}

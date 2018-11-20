@@ -65,6 +65,66 @@ def lijnen(provincie):
             lijnen_mod[lijnnummer] = traject
     return render_template('lijnenperprov.html', lijnen=lijnen)
 
+@app.route('/<provincie>/lijnen/<lijnnr>/')
+def lijnRegeling(provincie, lijnnr):
+    conn = http.client.HTTPSConnection('delijn.azure-api.net')
+    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}".format(provincie, lijnnr), "{body}", headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+    return render_template('directionselect.html', data=json.loads(data))
+
+@app.route('/<provincie>/lijnen/<lijnnr>/to/')
+def lijnRegelingHeen(provincie, lijnnr):
+    conn = http.client.HTTPSConnection('delijn.azure-api.net')
+    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/HEEN/real-time".format(provincie, lijnnr),
+                 "{body}", headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+    return render_template('onMap.html', data=json.loads(data))
+
+@app.route('/<provincie>/lijnen/<lijnnr>/from/')
+def lijnRegelingTerug(provincie, lijnnr):
+    conn = http.client.HTTPSConnection('delijn.azure-api.net')
+    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/TERUG/real-time".format(provincie, lijnnr),
+                 "{body}", headers)
+    response = conn.getresponse()
+    data = response.read()
+    conn.close()
+    data=json.loads(data)
+    ritten = {}
+    for i in range(len(data["ritDoorkomsten"])-1):
+        rit = data["ritDoorkomsten"][i]
+        ritnr = rit['ritnummer']
+        # print(ritnr)
+        # print(len(rit["doorkomsten"]))
+        ritten[ritnr] = {}
+        # Doorkomsten verwerken
+        for j in range(len(rit["doorkomsten"])-1):
+            # print(rit["doorkomsten"][j]["haltenummer"])
+            halte = rit["doorkomsten"][j]["haltenummer"]
+            # Locaties verwerken, nieuwe query
+            conn = http.client.HTTPSConnection('delijn.azure-api.net')
+            conn.request("GET",
+                         "/DLKernOpenData/v1/beta/haltes/{0}/{1}".format(provincie, halte),
+                         "{body}", headers)
+            response = conn.getresponse()
+            halteData = response.read()
+            conn.close()
+            halteData = json.loads(halteData)
+            lati = halteData["geoCoordinaat"]["latitude"]
+            longi = halteData["geoCoordinaat"]["longitude"]
+            # # print(lati, longi)
+
+            tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
+            ritten[ritnr][halte] = {}
+            ritten[ritnr][halte]["time"] = tijdstip
+            ritten[ritnr][halte]["lati"] = lati
+            ritten[ritnr][halte]["longi"] = longi
+            # print(tijdstip)
+    return render_template('onMap.html', data=data, ritten=ritten)
+
 class Welcome(Resource):
     def get(self):
         links = {}
@@ -77,42 +137,6 @@ class Welcome(Resource):
         links['Realtime info'] = '/realtime/<provincie>/<lijnnummer>/<richting>'
         return links
 
-
-# class Provincie(Resource):
-#     def get(self, entiteitnummer):
-#         try:
-#             conn = http.client.HTTPSConnection('delijn.azure-api.net')
-#             conn.request("GET", "/DLKernOpenData/v1/beta/entiteiten/%s" % entiteitnummer, "{body}", headers)
-#             response = conn.getresponse()
-#             data = response.read()
-#             # print(data)
-#             conn.close()
-#             return json.loads(data)
-#         except Exception as e:
-#             print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-# class LijnenPerProvincie(Resource):
-#     def get(self, provincie):
-#         try:
-#             conn = http.client.HTTPSConnection('delijn.azure-api.net')
-#             conn.request("GET", "/DLKernOpenData/v1/beta/entiteiten/{0}/lijnen".format(provincie), "{body}", headers)
-#             response = conn.getresponse()
-#             data = response.read()
-#             # print(data)
-#             conn.close()
-#             lijnen = json.loads(data)
-#             lijnen_mod = {}
-#             for i in range(len(lijnen['lijnen'])):
-#                 lijnnummer = lijnen['lijnen'][i]['lijnnummer']
-#                 traject = lijnen['lijnen'][i]['omschrijving']
-#                 # print("Lijn {0} met traject {1}".format(lijnnummer, traject))
-#                 if lijnen['lijnen'][i]['publiek'] == True:
-#                     print(lijnen['lijnen'][i]['publiek'])
-#                     lijnen_mod[lijnnummer] = traject
-#             return lijnen_mod
-#         except Exception as e:
-#             print("[Errno {0}] {1}".format(e.errno, e.strerror))
 
 
 class Lines(Resource):
@@ -197,9 +221,7 @@ class Map(Resource):
 
 
 api.add_resource(Welcome,               '/')
-# api.add_resource(Provincie,             '/provincies/<entiteitnummer>')
 api.add_resource(Lines,                 '/lijn')
-# api.add_resource(LijnenPerProvincie,    '/lijn/<provincie>')
 api.add_resource(Line,                  '/lijn/<provincie>/<lijn>')
 api.add_resource(Timetable,             '/timetable/<provincie>/<lijnnummer>/<richting>')
 api.add_resource(Realtimeinfo,          '/realtime/<provincie>/<lijnnummer>/<richting>')
