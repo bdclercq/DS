@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>New Age - Start Bootstrap Theme</title>
+    <title>DeLijn route planner</title>
 
     <style>
         #map {
@@ -69,111 +69,83 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container">
-        <!--<a class="navbar-brand js-scroll-trigger" href="#page-top">Start Bootstrap</a>-->
     </div>
 </nav>
 
 <header class="masthead">
+    <br>
+    <div id="map" ></div>
+    <script>
 
-    <!--<div class="container">-->
-        <!--<div class="row">-->
-            <!--<div class="col-lg-7 my-auto">-->
-                <!--<div class="header-content mx-auto">-->
-                    <!--<h1 class="mb-5">-->
-                        <br>
-                        <div id="map" ></div>
-                        <script>
+        var platform = new H.service.Platform({
+          app_id: 'lLhrUyfFEtsQcqQygfnX',     //set your app_id
+          app_code: 'XpBpGZrvaawH8C_H6N0KEQ',   //set your app_code
+          useCIT: true         //configure all services to use the 'CIT' environment
+        });
 
-                            var platform = new H.service.Platform({
-                              app_id: 'lLhrUyfFEtsQcqQygfnX',     //set your app_id
-                              app_code: 'XpBpGZrvaawH8C_H6N0KEQ',   //set your app_code
-                              useCIT: true         //configure all services to use the 'CIT' environment
-                            });
+        function calculateRoute(platform, wp0, wp1) {
+          var router = platform.getRoutingService(),
+            parameters = {
+              waypoint0: wp0.lat + "," + wp0.lng ,
+              waypoint1: wp1.lat + "," + wp1.lng,
+              mode: 'balanced;publicTransport',
+              departure: 'now'};
 
-                            function calculateRoute(platform, wp0, wp1) {
-                              var router = platform.getRoutingService(),
-                                parameters = {
-                                  waypoint0: wp0.lat + "," + wp0.lng ,
-                                  waypoint1: wp1.lat + "," + wp1.lng,
-                                  mode: 'balanced;publicTransport',
-                                  departure: 'now'};
+          router.calculateRoute(parameters,
+            function (result) {
+              var obj = JSON.parse(JSON.stringify(result));
+              console.log(obj);
+            }, function (error) {
+              alert(error);
+            });
+        }
 
-                              router.calculateRoute(parameters,
-                                function (result) {
-                                  var obj = JSON.parse(JSON.stringify(result));
-                                  console.log(obj);
-                                }, function (error) {
-                                  alert(error);
-                                });
-                            }
+        var map = L.map('map', {
+            center: [51.219448, 4.402464],
+            zoom: 15
+        });
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
 
-                            var map = L.map('map', {
-                                center: [51.219448, 4.402464],
-                                zoom: 15
-                            });
-                            L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-                                attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                            }).addTo(map);
+        var markers = {};
+        // var marker = L.marker([51.5, -0.09]).addTo(mymap); var lat = 0;
+        var lat = 0;
+        var lon = 0;
+        var count = 0;
+        function centerMap(lat, lon){
+            L.map.center = [lat, lon];
+            L.map.zoom = 15;
+        }
+        {% for halte in haltes %}
+            lat += {{ haltes[halte]['lati'] }};
+            lon += {{ haltes[halte]['longi'] }};
 
-                            var markers = {};
-                            // var marker = L.marker([51.5, -0.09]).addTo(mymap); var lat = 0;
-                            var lat = 0;
-                            var lon = 0;
-                            var count = 0;
-                            function centerMap(lat, lon){
-                                L.map.center = [lat, lon];
-                                L.map.zoom = 15;
-                            }
-                            {% for halte in haltes %}
-                                lat += {{ haltes[halte]['lati'] }};
-                                lon += {{ haltes[halte]['longi'] }};
-
-                                // count ++;
-                                markers[count] = L.marker([{{ haltes[halte]['lati'] }}, {{ haltes[halte]['longi'] }}]).addTo(map);
-                                markers[count].bindPopup("<b>{{halte}}</b><br>{{ haltes[halte]['time'] }}<br>" +
-                                    "{{ haltes[halte]['weather'] }}<br>{{ haltes[halte]['temp'] }} °C").openPopup();
-                                if (count > 0){
-                                    calculateRoute(platform, markers[count-1].getLatLng(), markers[count].getLatLng());
-                                }
-                                count ++;
-                            {% endfor %}
-                            {% for route in routes %}
-                                var pointA = new L.LatLng({{route[0][0]}}, {{route[0][1]}});
-                                var pointB = new L.LatLng({{route[1][0]}}, {{route[1][1]}});
-                                var pointList = [pointA, pointB];
-                                var firstpolyline = new L.Polyline(pointList, {
-                                    color: 'blue',
-                                    weight: 3,
-                                    opacity: 0.5,
-                                    smoothFactor: 1
-                                });
-                                firstpolyline.addTo(map);
-                            {% endfor %}
-                            centerMap(lat/count, lon/count);
-                        </script>
-                    <!--</h1>-->
-                <!--</div>-->
-            <!--</div>-->
-        <!--</div>-->
-    <!--</div>-->
+            // count ++;
+            markers[count] = L.marker([{{ haltes[halte]['lati'] }}, {{ haltes[halte]['longi'] }}]).addTo(map);
+            markers[count].bindPopup("<b>{{halte}}</b><br>{{ haltes[halte]['time'] }}<br>" +
+                "{{ haltes[halte]['weather'] }}<br>{{ haltes[halte]['temp'] }} °C").openPopup();
+            if (count > 0){
+                calculateRoute(platform, markers[count-1].getLatLng(), markers[count].getLatLng());
+            }
+            count ++;
+        {% endfor %}
+        {% for route in routes %}
+            var pointA = new L.LatLng({{route[0][0]}}, {{route[0][1]}});
+            var pointB = new L.LatLng({{route[1][0]}}, {{route[1][1]}});
+            var pointList = [pointA, pointB];
+            var firstpolyline = new L.Polyline(pointList, {
+                color: 'blue',
+                weight: 3,
+                opacity: 0.5,
+                smoothFactor: 1
+            });
+            firstpolyline.addTo(map);
+        {% endfor %}
+        centerMap(lat/count, lon/count);
+    </script>
 </header>
 
-<!--<footer>-->
-    <!--<div class="container">-->
-        <!--<p>&copy; Your Website 2018. All Rights Reserved.</p>-->
-        <!--<ul class="list-inline">-->
-            <!--<li class="list-inline-item">-->
-                <!--<a href="#">Privacy</a>-->
-            <!--</li>-->
-            <!--<li class="list-inline-item">-->
-                <!--<a href="#">Terms</a>-->
-            <!--</li>-->
-            <!--<li class="list-inline-item">-->
-                <!--<a href="#">FAQ</a>-->
-            <!--</li>-->
-        <!--</ul>-->
-    <!--</div>-->
-<!--</footer>-->
 
 <!-- Bootstrap core JavaScript -->
 <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js')}}"></script>

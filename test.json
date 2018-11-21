@@ -1,12 +1,231 @@
-[{'start':
-{'linkId': '+999908310', 'mappedPosition': {'latitude': 51.0911874, 'longitude': 4.4939623}, 'originalPosition': {'latitude': 51.091178, 'longitude': 4.493878}, 'type': 'stopOver', 'spot': 0.1363636, 'sideOfStreet': 'left', 'mappedRoadName': 'Spoorweglaan', 'label': 'Spoorweglaan', 'shapeIndex': 0},
-  'end': {'linkId': '+845899566', 'mappedPosition': {'latitude': 51.0882711, 'longitude': 4.4911952}, 'originalPosition': {'latitude': 51.0883313, 'longitude': 4.4911585}, 'type': 'stopOver', 'spot': 0.7346939, '
-sideOfStreet': 'left', 'mappedRoadName': 'A. Stocletlaan', 'label': 'A. Stocletlaan', 'shapeIndex': 19}, 'length': 457, 'travelTime': 149, 'maneuver': [{'position': {'latitude': 51.0911874, 'longitude': 4.4939623}, 'instruction': 'Head <span class="heading">nor
-th</span> on <span class="street">Spoorweglaan</span>. <span class="distance-description">Go for <span class="length">6 m</span>.</span>', 'travelTime': 6, 'length': 6, 'id': 'M1', '_type': 'PrivateTransportManeuverType'}, {'position': {'latitude': 51.0913074,
-'longitude': 4.4939446}
-, 'instruction': 'Go to the stop <span class="station">Duffel Station</span> and take the <span class="transit">bus</span> <span class="line">556</span> toward <span class="destination">Waarloos Kerk</span>. <span class="distance-description">Follow for <span class="stops">1 stop</span>.</span>',
-  'travelTime': 135, 'length': 443, 'id': 'M2', 'stopName': 'Duffel Station', '_type': 'PublicTransportManeuverType'}, {'position': {'latitude': 51.0883355, 'longitude': 4.4911551}, 'instruction': 'Get o
-ff at <span class="station">Duffel Erpsel</span>.', 'travelTime': 0, 'length': 0, 'id': 'M3', 'stopName': 'Duffel Erpsel', 'nextRoadName': 'A. Stocletlaan', '_type': 'PublicTransportManeuverType'}, {'position': {'latitude': 51.0883355, 'longitude': 4.4911551},
-'instruction': 'Head <span class="heading">south</span> on <span class="street">A. Stocletlaan</span>. <span class="distance-description">Go for <span class="length">8 m</span>.</span>', 'travelTime': 8, 'length': 8, 'id': 'M4', '_type': 'PrivateTransportManeuv
-erType'}, {'position': {'latitude': 51.0882711, 'longitude': 4.4911952}, 'instruction': 'Arrive at <span class="street">A. Stocletlaan</span>. Your destination is on the left.', 'travelTime': 0, 'length': 0, 'id': 'M5', '_type': 'PrivateTransportManeuverType'}]
-}]
+{
+  'response': {
+    'metaInfo': {
+      'timestamp': '2018-11-21T19:17:52Z',
+      'mapVersion': '8.30.90.154',
+      'moduleVersion': '7.2.201846-496',
+      'interfaceVersion': '2.6.34',
+      'availableMapVersion': [
+        '8.30.90.154'
+      ]
+    },
+    'route': [
+      {
+        'waypoint': [
+          {
+            'linkId': '+1605217464537317450',
+            'mappedPosition': {'latitude': 51.2203538, 'longitude': 4.3795431},
+            'originalPosition': {'latitude': 51.2203119, 'longitude': 4.3795499}, 'type': 'stopOver', 'spot': 0.8962264,
+            'sideOfStreet': 'neither', 'mappedRoadName': '', 'label': '', 'shapeIndex': 0
+          },
+          {'linkId': '+1605217464537317450', 'mappedPosition': {'latitude': 51.2208325, 'longitude': 4.3868338},
+            'originalPosition': {'latitude': 51.2207964, 'longitude': 4.3868927}, 'type': 'stopOver', 'spot': 0.2988506,
+            'sideOfStreet': ' neither', 'mappedRoadName': '', 'label': '','shapeIndex': 5
+          }
+        ],
+        'mode': {
+          'type': 'balanced',
+          'transportModes': [
+            'publicTransport'
+          ],
+          'trafficMode': 'disabled',
+          'feature': []
+        },
+        'leg': [
+          {
+            'start': {
+              'linkId': '+1605217464537317450',
+              'mappedPosition': {
+                'latitude': 51.2203538,
+                'longitude': 4.3795431
+              },
+              'ori
+              ginalPosition
+              ': {'
+              latitude
+              ': 51.2203119, '
+              longitude
+              ': 4.3795499}, '
+              type
+              ': '
+              stopOver
+              ', '
+              spot
+              ': 0.8962264, '
+              sideOfStreet
+              ': '
+              neither
+              ', '
+              mappedRoadName
+              ': '
+              ', '
+              label
+              ': '
+              ', '
+              shapeIndex
+              ': 0}, '
+              end
+              ': {'
+              linkId
+              ': '
+              +
+              1605217464537317450
+              ', '
+              mappedPosition
+              ': {'
+              latitude
+              ': 51.
+              2208325,
+              'longitude': 4.3868338
+            },
+            'originalPosition': {
+              'latitude': 51.2207964,
+              'longitude': 4.3868927
+            },
+            'type': 'stopOver',
+            'spot': 0.2988506,
+            'sideOfStreet': 'neither',
+            'mappedRoadName': '',
+            'label': '',
+            'shapeIndex': 5
+          },
+          'length'
+          :
+          524,
+          'travelTime'
+          :
+          125,
+          'man
+          euver
+          ': [{'
+          position
+          ': {'
+          latitude
+          ': 51.2203538, '
+          longitude
+          ': 4.3795431}, '
+          instruction
+          ': '
+          Depart
+          from
+          <span
+          class=
+          "station"
+          >Antwerpen
+          Halewijn</span>.
+          ', '
+          travelTime
+          ': 0, '
+          length
+          ': 0, '
+          id
+          ': '
+          M1
+          ', '
+          _type
+          ': '
+          PrivateTransportManeuverType
+          '}, {'
+          position
+          ': {'
+          latitude
+          ':
+          51.2203538,
+          'longitude'
+          :
+          4.3795431
+          },
+          'instruction'
+          :
+          'Take the <span class="transit">rail</span> <span class="line">15</span> toward <span class="destination">Antwerpen Premetrostation Meir</span>. <span class="distance-description">Follow for <span class="stops
+          ">1 station</span>.</span>', 'travelTime': 125, 'length': 524, 'id': 'M2', 'stopName': 'Antwerpen Halewijn', '_type': 'PublicTransportManeuverType'}, {'position': {'latitude': 51.2208152, 'longitude': 4.3868923}, 'instruction': 'Get off at <span class="
+          station
+          "
+          >Antwerpen
+          Premetrostation
+          Van
+          Eeden</span>.
+          ', '
+          travelTime
+          ': 0, '
+          length
+          ': 0, '
+          id
+          ': '
+          M3
+          ', '
+          stopName
+          ': '
+          Antwerpen
+          Premetrostation
+          Van
+          Eeden
+          ', '
+          _type
+          ': '
+          PublicTransportManeuverType
+          '}, {'
+          position
+          ': {'
+          latitude
+          ': 51.2208152, '
+          longitude
+          ': 4.3868923}, '
+          instruction
+          ': '
+          A
+          rrive
+          at
+          your
+          destination.
+          ', '
+          travelTime
+          ': 0, '
+          length
+          ': 0, '
+          id
+          ': '
+          M4
+          ', '
+          _type
+          ': '
+          PrivateTransportManeuverType
+          '}]}], '
+          publicTransportLine
+          ': [{'
+          lineName
+          ': '
+          15
+          ', '
+          companyName
+          ': '
+          ', '
+          destination
+          ': '
+          Antwerpen
+          Premetrostation
+          Meir
+          ', '
+          type
+          ': '
+          railLight
+          ', '
+          id
+          ': '
+          L1
+          '}],
+          'summary'
+          :
+          {
+            'distance': 524,
+            'baseTime': 125,
+            'text': 'The trip takes <span class="length">524 m</span> and <span class="time">2 mins</span>.',
+            'travelTime': 125,
+            'departure': '1970-01-01T00:00:00Z',
+            '_type': 'PublicTransportRouteSummaryType'
+          }
+          }
+        ],
+        'language': '
+        en-us
+        '}}
