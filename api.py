@@ -146,17 +146,20 @@ def lijnRegelingHeen(provincie, lijnnr):
 @app.route('/<provincie>/lijnen/<lijnnr>/from/')
 def lijnRegelingTerug(provincie, lijnnr):
     conn = http.client.HTTPSConnection('delijn.azure-api.net')
-    conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/TERUG/real-time".format(provincie, lijnnr),
+    conn.request("GET",
+                 "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/TERUG/real-time".format(provincie, lijnnr),
                  "{body}", headers)
     response = conn.getresponse()
     data = response.read()
     conn.close()
-    data=json.loads(data)
+    data = json.loads(data)
     haltes = {}
-    for i in range(len(data["ritDoorkomsten"])-1):
+    route_coords = []
+    for i in range(len(data["ritDoorkomsten"]) - 1):
         rit = data["ritDoorkomsten"][i]
+        prev_stop = 0
         # Doorkomsten verwerken
-        for j in range(len(rit["doorkomsten"])-1):
+        for j in range(len(rit["doorkomsten"]) - 1):
             halte = rit["doorkomsten"][j]["haltenummer"]
             # Locaties verwerken, nieuwe query
             conn = http.client.HTTPSConnection('delijn.azure-api.net')
@@ -173,21 +176,41 @@ def lijnRegelingTerug(provincie, lijnnr):
 
             tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
             dt = datetime.datetime.fromisoformat(tijdstip)
+            # print(dt)
             if name not in haltes:
                 haltes[name] = {}
                 haltes[name]["time"] = []
             haltes[name]["time"].append(dt.time().isoformat())
+
+            # Weer verwerken
             response = requests.get(
                 'https://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&units=metric&appid=034c68ce1f92c2e0641421854a0f287d'.format(
                     lati, longi))
             weather = response.json()
-            w_desc =  weather["weather"][0]["description"]
+            w_desc = weather["weather"][0]["description"]
             temp = weather["main"]["temp"]
+
+            # Routes verwerken
+            if prev_stop != 0:
+                lat1 = haltes[prev_stop]["lati"]
+                long1 = haltes[prev_stop]["longi"]
+                response = requests.get(
+                    'https://route.api.here.com/routing/7.2/calculateroute.json?waypoint0=geo!{0},{1}&waypoint1=geo!{2},{3}&mode=balanced;publicTransport&app_id={4}&app_code={5}'.format(
+                        lat1, long1, lati, longi, osm_app_id, osm_api_key))
+                route = response.json()
+                for i in range(len(route["response"]["route"][0]["leg"][0]["maneuver"]) - 1):
+                    rout_lat = route["response"]["route"][0]["leg"][0]["maneuver"][i]["position"]["latitude"]
+                    rout_lon = route["response"]["route"][0]["leg"][0]["maneuver"][i]["position"]["longitude"]
+                    rout_lat2 = route["response"]["route"][0]["leg"][0]["maneuver"][i + 1]["position"]["latitude"]
+                    rout_lon2 = route["response"]["route"][0]["leg"][0]["maneuver"][i + 1]["position"]["longitude"]
+                    route_coords.append([[rout_lat, rout_lon], [rout_lat2, rout_lon2]])
+
             haltes[name]["weather"] = w_desc
             haltes[name]["temp"] = temp
             haltes[name]["lati"] = lati
             haltes[name]["longi"] = longi
-    return render_template('onMap.html', haltes=haltes)
+            prev_stop = name
+    return render_template('onMap.html', haltes=haltes, routes=route_coords)
 
 
 if __name__ == '__main__':
