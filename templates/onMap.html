@@ -114,6 +114,7 @@
                             L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
                                 attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             }).addTo(map);
+
                             var markers = {};
                             // var marker = L.marker([51.5, -0.09]).addTo(mymap); var lat = 0;
                             var lat = 0;
@@ -126,6 +127,7 @@
                             {% for halte in haltes %}
                                 lat += {{ haltes[halte]['lati'] }};
                                 lon += {{ haltes[halte]['longi'] }};
+
                                 // count ++;
                                 markers[count] = L.marker([{{ haltes[halte]['lati'] }}, {{ haltes[halte]['longi'] }}]).addTo(map);
                                 markers[count].bindPopup("<b>{{halte}}</b><br>{{ haltes[halte]['time'] }}<br>" +
@@ -134,6 +136,18 @@
                                     calculateRoute(platform, markers[count-1].getLatLng(), markers[count].getLatLng());
                                 }
                                 count ++;
+                            {% endfor %}
+                            {% for route in routes %}
+                                var pointA = new L.LatLng({{route[0][0]}}, {{route[0][1]}});
+                                var pointB = new L.LatLng({{route[1][0]}}, {{route[1][1]}});
+                                var pointList = [pointA, pointB];
+                                var firstpolyline = new L.Polyline(pointList, {
+                                    color: 'blue',
+                                    weight: 3,
+                                    opacity: 0.5,
+                                    smoothFactor: 1
+                                });
+                                firstpolyline.addTo(map);
                             {% endfor %}
                             centerMap(lat/count, lon/count);
                         </script>
