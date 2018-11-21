@@ -4,6 +4,7 @@ from flask import Flask, render_template
 from flask_restful import Resource, Api, reqparse, fields, marshal_with
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 import json
+import requests
 
 # Entiteiten == Provincie
 
@@ -108,6 +109,12 @@ def lijnRegelingHeen(provincie, lijnnr):
                 haltes[name] = {}
                 haltes[name]["time"] = []
             haltes[name]["time"].append(tijdstip)
+            response = requests.get('https://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&units=metric&appid=034c68ce1f92c2e0641421854a0f287d'.format(lati, longi))
+            weather = response.json()
+            w_desc = weather["weather"][0]["description"]
+            temp = weather["main"]["temp"]
+            haltes[name]["weather"] = w_desc
+            haltes[name]["temp"] = temp
             haltes[name]["lati"] = lati
             haltes[name]["longi"] = longi
     return render_template('onMap.html', haltes=haltes)
@@ -145,6 +152,14 @@ def lijnRegelingTerug(provincie, lijnnr):
                 haltes[name] = {}
                 haltes[name]["time"] = []
             haltes[name]["time"].append(tijdstip)
+            response = requests.get(
+                'https://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&units=metric&appid=034c68ce1f92c2e0641421854a0f287d'.format(
+                    lati, longi))
+            weather = response.json()
+            w_desc =  weather["weather"][0]["description"]
+            temp = weather["main"]["temp"]
+            haltes[name]["weather"] = w_desc
+            haltes[name]["temp"] = temp
             haltes[name]["lati"] = lati
             haltes[name]["longi"] = longi
     return render_template('onMap.html', haltes=haltes)

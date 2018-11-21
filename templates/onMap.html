@@ -43,6 +43,13 @@
             integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
             crossorigin=""></script>
 
+    <meta name="viewport" content="initial-scale=1.0,
+    width=device-width" />
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-core.js"
+    type="text/javascript" charset="utf-8"></script>
+    <script src="http://js.api.here.com/v3/3.0/mapsjs-service.js"
+    type="text/javascript" charset="utf-8"></script>
+
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <!-- Custom fonts for this template -->
@@ -76,6 +83,30 @@
                         <br>
                         <div id="map" ></div>
                         <script>
+
+                            var platform = new H.service.Platform({
+                              app_id: 'lLhrUyfFEtsQcqQygfnX',     //set your app_id
+                              app_code: 'XpBpGZrvaawH8C_H6N0KEQ',   //set your app_code
+                              useCIT: true         //configure all services to use the 'CIT' environment
+                            });
+
+                            function calculateRoute(platform, wp0, wp1) {
+                              var router = platform.getRoutingService(),
+                                parameters = {
+                                  waypoint0: wp0.lat + "," + wp0.lng ,
+                                  waypoint1: wp1.lat + "," + wp1.lng,
+                                  mode: 'balanced;publicTransport',
+                                  departure: 'now'};
+
+                              router.calculateRoute(parameters,
+                                function (result) {
+                                  var obj = JSON.parse(JSON.stringify(result));
+                                  console.log(obj);
+                                }, function (error) {
+                                  alert(error);
+                                });
+                            }
+
                             var map = L.map('map', {
                                 center: [51.219448, 4.402464],
                                 zoom: 15
@@ -97,7 +128,11 @@
                                 lon += {{ haltes[halte]['longi'] }};
                                 // count ++;
                                 markers[count] = L.marker([{{ haltes[halte]['lati'] }}, {{ haltes[halte]['longi'] }}]).addTo(map);
-                                markers[count].bindPopup("<b>{{halte}}</b><br>{{ haltes[halte]['time'] }}").openPopup();
+                                markers[count].bindPopup("<b>{{halte}}</b><br>{{ haltes[halte]['time'] }}<br>" +
+                                    "{{ haltes[halte]['weather'] }}<br>{{ haltes[halte]['temp'] }} °C").openPopup();
+                                if (count > 0){
+                                    calculateRoute(platform, markers[count-1].getLatLng(), markers[count].getLatLng());
+                                }
                                 count ++;
                             {% endfor %}
                             centerMap(lat/count, lon/count);
