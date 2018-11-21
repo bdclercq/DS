@@ -1,3 +1,4 @@
+import datetime
 from json import JSONDecodeError
 
 from flask import Flask, render_template
@@ -32,20 +33,19 @@ params = urllib.parse.urlencode({
 def hello(name=None):
     return render_template('hello.html', name=name)
 
+@app.route('/')
 @app.route('/provincies/')
 def provincies():
     conn = http.client.HTTPSConnection('delijn.azure-api.net')
     conn.request("GET", "/DLKernOpenData/v1/beta/entiteiten?%s" % params, "{body}", headers)
     response = conn.getresponse()
     data = response.read()
-    # print(data)
     conn.close()
     provincies = {}
     data = json.loads(data)
     for i in range(len(data['entiteiten'])):
         name = data['entiteiten'][i - 1]['omschrijving']
         prov_id = data['entiteiten'][i]['entiteitnummer']
-        # print("Provincie {0} heeft ID {1}".format(name, prov_id))
         provincies[prov_id] = name
     return render_template('provincies.html',entiteiten=data)
 
@@ -56,14 +56,12 @@ def lijnen(provincie):
     conn.request("GET", "/DLKernOpenData/v1/beta/entiteiten/{0}/lijnen".format(provincie), "{body}", headers)
     response = conn.getresponse()
     data = response.read()
-    # print(data)
     conn.close()
     lijnen = json.loads(data)
     lijnen_mod = {}
     for i in range(len(lijnen['lijnen'])):
         lijnnummer = lijnen['lijnen'][i]['lijnnummer']
         traject = lijnen['lijnen'][i]['omschrijving']
-        # print("Lijn {0} met traject {1}".format(lijnnummer, traject))
         if lijnen['lijnen'][i]['publiek'] == True:
             print(lijnen['lijnen'][i]['publiek'])
             lijnen_mod[lijnnummer] = traject
@@ -110,10 +108,12 @@ def lijnRegelingHeen(provincie, lijnnr):
             name = halteData["omschrijving"]
 
             tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
+            dt = datetime.datetime.fromisoformat(tijdstip)
+            # print(dt)
             if name not in haltes:
                 haltes[name] = {}
                 haltes[name]["time"] = []
-            haltes[name]["time"].append(tijdstip)
+            haltes[name]["time"].append(dt.time().isoformat())
 
             # Weer verwerken
             response = requests.get('https://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&units=metric&appid=034c68ce1f92c2e0641421854a0f287d'.format(lati, longi))
@@ -130,15 +130,11 @@ def lijnRegelingHeen(provincie, lijnnr):
                         lat1, long1, lati, longi, osm_app_id, osm_api_key))
                 route = response.json()
                 for i in range(len(route["response"]["route"][0]["leg"][0]["maneuver"])-1):
-                    # for j in range(len(route["response"]["route"][0]["leg"][0]["maneuver"][i])-1):
-                    # print(route["response"]["route"][0]["leg"][0]["maneuver"][i])
-                    # print('\n')
                     rout_lat = route["response"]["route"][0]["leg"][0]["maneuver"][i]["position"]["latitude"]
                     rout_lon = route["response"]["route"][0]["leg"][0]["maneuver"][i]["position"]["longitude"]
                     rout_lat2 = route["response"]["route"][0]["leg"][0]["maneuver"][i+1]["position"]["latitude"]
                     rout_lon2 = route["response"]["route"][0]["leg"][0]["maneuver"][i+1]["position"]["longitude"]
                     route_coords.append([[rout_lat, rout_lon], [rout_lat2, rout_lon2]])
-                        # print(rout_lat, rout_lon)
 
             haltes[name]["weather"] = w_desc
             haltes[name]["temp"] = temp
@@ -176,10 +172,11 @@ def lijnRegelingTerug(provincie, lijnnr):
             name = halteData["omschrijving"]
 
             tijdstip = rit["doorkomsten"][j]["dienstregelingTijdstip"]
+            dt = datetime.datetime.fromisoformat(tijdstip)
             if name not in haltes:
                 haltes[name] = {}
                 haltes[name]["time"] = []
-            haltes[name]["time"].append(tijdstip)
+            haltes[name]["time"].append(dt.time().isoformat())
             response = requests.get(
                 'https://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&units=metric&appid=034c68ce1f92c2e0641421854a0f287d'.format(
                     lati, longi))
@@ -191,108 +188,6 @@ def lijnRegelingTerug(provincie, lijnnr):
             haltes[name]["lati"] = lati
             haltes[name]["longi"] = longi
     return render_template('onMap.html', haltes=haltes)
-
-class Welcome(Resource):
-    def get(self):
-        links = {}
-        links['Provincies'] = '/provincies'
-        links['Specifieke provincie'] = '/provincies/<provincie_id>'
-        links['Alle lijnen'] = '/lijn'
-        links['Lijnen per provincie'] = '/lijn/<provincie>'
-        links['Specifieke lijn'] = '/lijn/<provincie>/<lijn_nummer>'
-        links['Timetable'] = '/timetable/<provincie>/<lijnnummer>/<richting>'
-        links['Realtime info'] = '/realtime/<provincie>/<lijnnummer>/<richting>'
-        return links
-
-
-
-class Lines(Resource):
-    def get(self):
-        try:
-            conn = http.client.HTTPSConnection('delijn.azure-api.net')
-            conn.request("GET", "/DLKernOpenData/v1/beta/lijnen?%s" % params, "{body}", headers)
-            response = conn.getresponse()
-            data = response.read()
-            # print(data)
-            conn.close()
-            return json.loads(data)
-        except Exception as e:
-            print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-class Line(Resource):
-    def get(self, provincie, lijn):
-        try:
-            conn = http.client.HTTPSConnection('delijn.azure-api.net')
-            conn.request("GET", "/DLKernOpenData/v1/beta/lijnen/{0}/{1}".format(provincie, lijn), "{body}", headers)
-            response = conn.getresponse()
-            data = response.read()
-            # print(data)
-            conn.close()
-            return json.loads(data)
-        except Exception as e:
-            print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-class Timetable(Resource):
-    def get(self, provincie, lijnnummer, richting):
-        try:
-            conn = http.client.HTTPSConnection('delijn.azure-api.net')
-            conn.request("GET",
-                         "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/{2}/dienstregelingen".format(provincie, lijnnummer, richting.upper()),
-                         "{body}", headers)
-            response = conn.getresponse()
-            data = response.read()
-            conn.close()
-            return json.loads(data)
-        except JSONDecodeError as je:
-            print(je)
-        except Exception as e:
-            print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-class Realtimeinfo(Resource):
-    def get(self, provincie, lijnnummer, richting):
-        try:
-            conn = http.client.HTTPSConnection('delijn.azure-api.net')
-            conn.request("GET",
-                         "/DLKernOpenData/v1/beta/lijnen/{0}/{1}/lijnrichtingen/{2}/real-time".format(provincie, lijnnummer, richting.upper()),
-                         "{body}", headers)
-            response = conn.getresponse()
-            data = response.read()
-            conn.close()
-            return json.loads(data)
-        except JSONDecodeError as je:
-            print(je)
-        except Exception as e:
-            print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-class Map(Resource):
-    def get(self, lat, long):
-        try:
-            print("http://dev.virtualearth.net/REST/v1/Locations/{0},{1}?o=json&key={2}".format(lat, long, bingkey))
-            conn = http.client.HTTPSConnection('http://dev.virtualearth.net')
-            conn.request("GET",
-                         "/REST/v1/Locations/{0},{1}?o=json&key={2}".format(lat, long, bingkey),
-                         "{body}", headers)
-            response = conn.getresponse()
-            data = response.read()
-            print(data)
-            conn.close()
-            return json.loads(data)
-        except JSONDecodeError as je:
-            print(je)
-        except Exception as e:
-            print("[Errno {0}] {1}".format(e.errno, e.strerror))
-
-
-api.add_resource(Welcome,               '/')
-api.add_resource(Lines,                 '/lijn')
-api.add_resource(Line,                  '/lijn/<provincie>/<lijn>')
-api.add_resource(Timetable,             '/timetable/<provincie>/<lijnnummer>/<richting>')
-api.add_resource(Realtimeinfo,          '/realtime/<provincie>/<lijnnummer>/<richting>')
-api.add_resource(Map,                   '/map/<lat>,<long>')
 
 
 if __name__ == '__main__':
