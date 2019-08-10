@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+
+    <h2>Line {{ data.lijnnummer }}</h2>
+    {{ data.omschrijving }}
+
+    </h1>
+    <form>
+        <label for="directions">Direction</label>
+        <select id="directions" style="color:#383838; font-size: 10pt; background:#CEBC77" size="1">
+            <option value="">---SELECT---</option>
+            <option value="to"> To</option>
+            <option value="from"> From</option>
+        </select>
+    </form>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#directions").change(function () {
+                var address = $(this).val();
+                window.location.replace(address);
+            });
+        });
+    </script>
+    </div>
+    </div>
+    </div>
+    </div>
+    </header>
+{% endblock %}

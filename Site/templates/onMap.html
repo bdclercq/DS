@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+
+    {% if times %}
+        <div class="row">
+            <div class="col" style="overflow-y: scroll; height:600px;">
+                {% for time in times %}
+                    {#            {{ time }}<br>#}
+                    Name: {{ time.name }}<br>
+                    Weather: {{ time.temp }}°C, {{ time.weather }}<br>
+                    Passings: {{ time.time }}<br>
+                    {#                    Route coords: ({{ time.route[0][0] }}, {{ time.route[0][1] }})<br>#}
+                    {#            Route: {{ time.route }}#}
+                    <hr class="sidebar-divider">
+                {% endfor %}
+            </div>
+
+            <div class="col">
+                <div id='map' style='width: 600px; height: 500px;'></div>
+                <script>
+                    var platform = new H.service.Platform({
+                        app_id: 'lLhrUyfFEtsQcqQygfnX',     //set your app_id
+                        app_code: 'XpBpGZrvaawH8C_H6N0KEQ',   //set your app_code
+                        useCIT: true         //configure all services to use the 'CIT' environment
+                    });
+
+                    var map = L.map('map', {
+                        center: [{{ times[0].lati }}, {{ times[0].longi }}],
+                        zoom: 15
+                    });
+
+                    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    function centerMap(lat, lon) {
+                        L.map.center = [lat, lon];
+                        L.map.zoom = 15;
+                    };
+
+                    var markers = {};
+                    var count = 0;
+                    {% for time in times %}
+                        // count ++;
+                        markers[count] = L.marker([{{ time.lati }}, {{ time.longi }}]).addTo(map);
+                        markers[count].bindPopup("<b>{{time.name}}</b><br>{{ time.time }}<br>" +
+                            "{{ time.weather }}<br>{{ time.temp }} °C").openPopup();
+                        count++;
+                    {% endfor %}
+
+                    var pointList = []
+                    {% for route in routes %}
+                        pointList.push(new L.LatLng({{route[0]}}, {{route[1]}}));
+                    {% endfor %}
+                    var firstpolyline = new L.Polyline(pointList, {
+                        color: 'blue',
+                        weight: 3,
+                        opacity: 0.5,
+                        smoothFactor: 1
+                    });
+                    firstpolyline.addTo(map);
+                    {#                    centerMap(lat / count, lon / count);#}
+                </script>
+            </div>
+        </div>
+
+    {% endif %}
+{% endblock %}

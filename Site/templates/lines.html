@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if lines %}
+        <form>
+            <label for="lijnen">Available lines</label>
+            <div style="overflow-y: scroll; height:500px;">
+                {% for lijn in lines %}
+                    {{ lijn.lijnnummer }} {{ lijn.omschrijving }}<a href="/timetable/{{ prov }}/{{ lijn.lijnnummer }}/to">To direction</a><br>
+                {% endfor %}
+            </div>
+        </form>
+    {% else %}
+        <h1>Oops, something went wrong</h1>
+    {% endif %}
+{% endblock %}

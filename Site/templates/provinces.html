@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+    {% if provs %}
+    {% for prov in provs %}
+        <a href="/lines/{{ prov['entiteitnummer'] }}">{{ prov['omschrijving'] }}</a> <br>
+    {% endfor %}
+
+    {% else %}
+    <h1>Oops, something went wrong</h1>
+    {% endif %}
+{% endblock %}
