@@ -1,11 +1,8 @@
 from flask import jsonify, send_file
 from . import api
 import datetime
-import http.client
-import json
 import requests
 import urllib, urllib3
-import sys
 
 # Entiteiten == Provincie
 
@@ -20,18 +17,6 @@ osm_app_id = 'lLhrUyfFEtsQcqQygfnX'
 osm_api_key = 'XpBpGZrvaawH8C_H6N0KEQ'
 
 params = urllib.parse.urlencode({})
-
-
-@api.route('/check_alive/')
-def check_alive():
-    response_object = {
-        'status': 'success',
-        'data': {
-            'message': "Ah, ha, ha, ha, stayin' alive, stayin' alive",
-            'time': datetime.datetime.now().strftime("%H:%M:%S")
-        }
-    }
-    return jsonify(response_object), 200
 
 
 @api.route('/get_provinces/')

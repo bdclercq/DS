@@ -5,5 +5,12 @@
 \BOOKMARK [2][-]{subsection.2.1}{Provinces}{section.2}% 5
 \BOOKMARK [2][-]{subsection.2.2}{Lines}{section.2}% 6
 \BOOKMARK [2][-]{subsection.2.3}{Routes \046 passings}{section.2}% 7
-\BOOKMARK [1][-]{section.3}{Design choices}{}% 8
-\BOOKMARK [1][-]{section.4}{Tools used}{}% 9
+\BOOKMARK [2][-]{subsection.2.4}{Other calls}{section.2}% 8
+\BOOKMARK [1][-]{section.3}{Site links}{}% 9
+\BOOKMARK [2][-]{subsection.3.1}{/}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.2}{/provinces}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.3}{/lines/<province>}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.4}{/timetable/<province>/<line>/to}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.5}{/timetable/<province>/<line>/from}{section.3}% 14
+\BOOKMARK [1][-]{section.4}{Design choices}{}% 15
+\BOOKMARK [1][-]{section.5}{Tools used}{}% 16

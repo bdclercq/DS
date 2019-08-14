@@ -5,5 +5,12 @@
 \contentsline {subsection}{\numberline {2.1}Provinces}{3}{subsection.2.1}% 
 \contentsline {subsection}{\numberline {2.2}Lines}{4}{subsection.2.2}% 
 \contentsline {subsection}{\numberline {2.3}Routes \& passings}{5}{subsection.2.3}% 
-\contentsline {section}{\numberline {3}Design choices}{6}{section.3}% 
-\contentsline {section}{\numberline {4}Tools used}{7}{section.4}% 
+\contentsline {subsection}{\numberline {2.4}Other calls}{5}{subsection.2.4}% 
+\contentsline {section}{\numberline {3}Site links}{6}{section.3}% 
+\contentsline {subsection}{\numberline {3.1}/}{6}{subsection.3.1}% 
+\contentsline {subsection}{\numberline {3.2}/provinces}{6}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}/lines/<province>}{6}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.4}/timetable/<province>/<line>/to}{6}{subsection.3.4}% 
+\contentsline {subsection}{\numberline {3.5}/timetable/<province>/<line>/from}{6}{subsection.3.5}% 
+\contentsline {section}{\numberline {4}Design choices}{7}{section.4}% 
+\contentsline {section}{\numberline {5}Tools used}{8}{section.5}% 
