@@ -73,13 +73,13 @@ def lijnen(provincie):
         return jsonify(response_object), 400
 
 
-@api.route('/timetable/<prov>/<line>/static/img/<name>')
+@api.route('/provinces/<prov>/lines/<line>/static/img/<name>')
 def get_icon(prov, line, name):
     return send_file('static/img/'+name, mimetype='image/gif')
 
 
-@api.route('/timetable/static/img/<name>')
-def get_logo(name):
+@api.route('/provinces/<prov>/static/img/<name>')
+def get_logo(prov, name):
     return send_file('static/img/'+name, mimetype='image/gif')
 
 

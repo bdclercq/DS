@@ -8,9 +8,9 @@
 \contentsline {subsection}{\numberline {2.4}Other calls}{5}{subsection.2.4}% 
 \contentsline {section}{\numberline {3}Site links}{6}{section.3}% 
 \contentsline {subsection}{\numberline {3.1}/}{6}{subsection.3.1}% 
-\contentsline {subsection}{\numberline {3.2}/provinces}{6}{subsection.3.2}% 
-\contentsline {subsection}{\numberline {3.3}/lines/<province>}{6}{subsection.3.3}% 
-\contentsline {subsection}{\numberline {3.4}/timetable/<province>/<line>/to}{6}{subsection.3.4}% 
-\contentsline {subsection}{\numberline {3.5}/timetable/<province>/<line>/from}{6}{subsection.3.5}% 
-\contentsline {section}{\numberline {4}Design choices}{7}{section.4}% 
-\contentsline {section}{\numberline {5}Tools used}{8}{section.5}% 
+\contentsline {subsection}{\numberline {3.2}/provinces}{7}{subsection.3.2}% 
+\contentsline {subsection}{\numberline {3.3}/lines/$<$province$>$}{8}{subsection.3.3}% 
+\contentsline {subsection}{\numberline {3.4}/timetable/$<$province$>$/$<$line$>$/to}{9}{subsection.3.4}% 
+\contentsline {subsection}{\numberline {3.5}/timetable/$<$province$>$/$<$line$>$/from}{10}{subsection.3.5}% 
+\contentsline {section}{\numberline {4}Design choices}{11}{section.4}% 
+\contentsline {section}{\numberline {5}Tools used}{12}{section.5}% 

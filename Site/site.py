@@ -21,7 +21,7 @@ def provinces():
         return render_template('home.html', mess=provs['data'])
 
 
-@site.route('/lines/<province>', methods=['POST', 'GET'])
+@site.route('/provinces/<province>/lines', methods=['POST', 'GET'])
 def lines(province):
     lines = requests.get('http://localhost:5000/get_lines/{0}'.format(province))
     lines = lines.json()
@@ -31,7 +31,7 @@ def lines(province):
         return render_template('home.html', mess=lines['data'])
 
 
-@site.route('/timetable/<province>/<line>/to', methods=['POST', 'GET'])
+@site.route('/provinces/<province>/lines/<line>/to', methods=['POST', 'GET'])
 def timetable_to(province, line):
     timetable = requests.get('http://localhost:5000/get_timetable/{0}/{1}/to'.format(province, line))
     timetable = timetable.json()
@@ -45,7 +45,7 @@ def timetable_to(province, line):
         return render_template('errors.html', mess=timetable['message'])
 
 
-@site.route('/timetable/<province>/<line>/from', methods=['POST', 'GET'])
+@site.route('/provinces/<province>/lines/<line>/from', methods=['POST', 'GET'])
 def timetable_from(province, line):
     timetable = requests.get('http://localhost:5000/get_timetable/{0}/{1}/from'.format(province, line))
     timetable = timetable.json()

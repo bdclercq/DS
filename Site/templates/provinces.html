@@ -4,7 +4,7 @@
     <a>Please select the province you are currently traveling (or will be traveling) from the list below.</a><br><br>
     {% if provs %}
         {% for prov in provs %}
-            <a href="/lines/{{ prov['entiteitnummer'] }}">{{ prov['omschrijving'] }}</a> <br>
+            <a href="/provinces/{{ prov['entiteitnummer'] }}/lines">{{ prov['omschrijving'] }}</a> <br>
         {% endfor %}
 
     {% else %}
