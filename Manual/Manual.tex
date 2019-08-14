@@ -235,7 +235,7 @@ At the home page, a user can start the process of planning his/her route by sele
 \end{center}
 At the \lq Provinces page\rq, a user can start the process of planning his/her route by selecting a province. This will take the user to the next step.
 
-\subsection{/lines/$<$province$>$}
+\subsection{/provinces/$<$province$>$/lines}
 \begin{center}
 	\includegraphics[width=\linewidth]{images/Select_line.png}
 	\captionof{figure}{Line selector}
@@ -243,14 +243,14 @@ At the \lq Provinces page\rq, a user can start the process of planning his/her r
 After having selected a province, the user is provided a list of all lines that are available for that province.\\
 On the \lq Lines page\rq, the user can then select which direction he or she wants to go.
 
-\subsection{/timetable/$<$province$>$/$<$line$>$/to}
+\subsection{/provinces/$<$province$>$/lines/$<$line$>$/to}
 \begin{center}
 	\includegraphics[width=\linewidth]{images/Route_to.png}
 	\captionof{figure}{Example route}
 \end{center}
 Once a direction has been chosen, everything will be processed and  the user will be given a page containing all necessary info.
 
-\subsection{/timetable/$<$province$>$/$<$line$>$/from}
+\subsection{/provinces/$<$province$>$/lines/$<$line$>$/from}
 \begin{center}
 	\includegraphics[width=\linewidth]{images/Route_from.png}
 	\captionof{figure}{Example route}
@@ -260,7 +260,8 @@ Once a direction has been chosen, everything will be processed and  the user wil
 \newpage
 
 \section{Design choices}
-
+I decided to split the application in 2 parts: one part which contains all API calls and one which contains all site links. This way, either part can be used without needing the exact other.\\
+As for the naming of API calls/site links, I chose to name them according to what they represent. After all, a link like `/provinces/$<$province$>$/lines/$<$line$>$/$<$direction$>$' wouldn't really give the user any indication as to what will be given
 
 \newpage
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.7.18)  14 AUG 2019 11:50
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2019.7.18)  14 AUG 2019 12:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -564,25 +564,40 @@ Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 256.
 See the caption package documentation for explanation.
 
-[9 <./images/Route_to.png>] [10 <./images/Route_from.png>] [11]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 269.
+[9 <./images/Route_to.png>] [10 <./images/Route_from.png>]
+Overfull \hbox (84.25572pt too wide) in paragraph at lines 263--265
+\OT1/cmr/m/n/12 what they rep-re-sent. Af-ter all, a link like `/provinces/$\OM
+L/cmm/m/it/12 <$\OT1/cmr/m/n/12 province$\OML/cmm/m/it/12 >$\OT1/cmr/m/n/12 /li
+nes/$\OML/cmm/m/it/12 <$\OT1/cmr/m/n/12 line$\OML/cmm/m/it/12 >$\OT1/cmr/m/n/12
+ /$\OML/cmm/m/it/12 <$\OT1/cmr/m/n/12 direction$\OML/cmm/m/it/12 >$\OT1/cmr/m/n
+/12 '
+ []
 
+[11]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 270.
 
-(/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
+ (/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 269.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 275.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 270.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 276.
  [12]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 275.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 276.
 
 (./Manual.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 275.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 275.
-Package rerunfilecheck Info: File `Manual.out' has not changed.
-(rerunfilecheck)             Checksum: 16A47BBFD55A4904483D4B8BC6DDA88B;948.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 275.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 276.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 276.
+
+
+Package rerunfilecheck Warning: File `Manual.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `Manual.out':
+(rerunfilecheck)             Before: 16A47BBFD55A4904483D4B8BC6DDA88B;948
+(rerunfilecheck)             After:  68FB9F67EC9E5D503B00B050DA704AAB;970.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 276.
  ) 
 Here is how much of TeX's memory you used:
  9076 strings out of 492616
@@ -591,7 +606,7 @@ Here is how much of TeX's memory you used:
  12760 multiletter control sequences out of 15000+600000
  9491 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,6n,77p,248b,1223s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,6n,77p,280b,1223s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb>
 </usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></
@@ -599,7 +614,7 @@ usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></us
 r/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr
 /local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/
 local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on Manual.pdf (12 pages, 4706642 bytes).
+Output written on Manual.pdf (12 pages, 4706862 bytes).
 PDF statistics:
  334 PDF objects out of 1000 (max. 8388607)
  300 compressed objects within 3 object streams

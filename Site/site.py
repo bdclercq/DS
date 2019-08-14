@@ -31,6 +31,11 @@ def lines(province):
         return render_template('home.html', mess=lines['data'])
 
 
+@site.route('/provinces/<province>/lines/<line>', methods=['POST', 'GET'])
+def only_line(province, line):
+    return render_template('errors.html')
+
+
 @site.route('/provinces/<province>/lines/<line>/to', methods=['POST', 'GET'])
 def timetable_to(province, line):
     timetable = requests.get('http://localhost:5000/get_timetable/{0}/{1}/to'.format(province, line))
