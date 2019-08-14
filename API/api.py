@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, send_file
 from . import api
 import datetime
 import http.client
@@ -20,6 +20,18 @@ osm_app_id = 'lLhrUyfFEtsQcqQygfnX'
 osm_api_key = 'XpBpGZrvaawH8C_H6N0KEQ'
 
 params = urllib.parse.urlencode({})
+
+
+@api.route('/check_alive/')
+def check_alive():
+    response_object = {
+        'status': 'success',
+        'data': {
+            'message': "Ah, ha, ha, ha, stayin' alive, stayin' alive",
+            'time': datetime.datetime.now().strftime("%H:%M:%S")
+        }
+    }
+    return jsonify(response_object), 200
 
 
 @api.route('/get_provinces/')
@@ -76,13 +88,23 @@ def lijnen(provincie):
         return jsonify(response_object), 400
 
 
+@api.route('/timetable/<prov>/<line>/static/img/<name>')
+def get_icon(prov, line, name):
+    return send_file('static/img/'+name, mimetype='image/gif')
+
+
+@api.route('/timetable/static/img/<name>')
+def get_logo(name):
+    return send_file('static/img/'+name, mimetype='image/gif')
+
+
 @api.route('/get_timetable/<provincie>/<lijnnr>/to/')
 def timetable_to(provincie, lijnnr):
-
     try:
         print(datetime.datetime.now())
-        response = requests.get(base_url + "/DLKernOpenData/api/v1/lijnen/{0}/{1}/lijnrichtingen/HEEN/real-time".format(provincie, lijnnr),
-                                headers=headers)
+        response = requests.get(
+            base_url + "/DLKernOpenData/api/v1/lijnen/{0}/{1}/lijnrichtingen/HEEN/real-time".format(provincie, lijnnr),
+            headers=headers)
         data = response.json()
         try:
             if data['statusCode'] == 404:
@@ -97,7 +119,7 @@ def timetable_to(provincie, lijnnr):
         line_route = 0
         stop_coords = {}
         count = 0
-        for i in range(min(2, len(data["ritDoorkomsten"]) - 1)):
+        for i in range(min(5, len(data["ritDoorkomsten"]) - 1)):
             rit = data["ritDoorkomsten"][i]
             # Doorkomsten verwerken
             for j in range(len(rit["doorkomsten"]) - 1):
@@ -164,14 +186,13 @@ def timetable_to(provincie, lijnnr):
         print(datetime.datetime.now())
         try:
             route_params = ""
-            route_params += "waypoint" + str(0) + "=stopOver!" + str(stop_coords['0'][0]) + "," + str(stop_coords['0'][1]) + "&"
-            for i in range(1, count-1):
-                route_params += "waypoint"+str(i)+"=passThrough!"+str(stop_coords[str(i)][0])+"," + \
-                                str(stop_coords[str(i)][1])+"&"
-            route_params += "waypoint"+str(count-1)+"=geo!"+str(stop_coords[str(count-1)][0])+"," + \
-                            str(stop_coords[str(count-1)][1])
-            print('https://route.api.here.com/routing/7.2/calculateroute.json?{0}&mode=balanced;publicTransport;traffic:disabled&routeattributes=none,sh&app_id={1}&app_code={2}'.format(
-                    route_params, osm_app_id, osm_api_key))
+            route_params += "waypoint" + str(0) + "=stopOver!" + str(stop_coords['0'][0]) + "," + str(
+                stop_coords['0'][1]) + "&"
+            for i in range(1, count - 1):
+                route_params += "waypoint" + str(i) + "=passThrough!" + str(stop_coords[str(i)][0]) + "," + \
+                                str(stop_coords[str(i)][1]) + "&"
+            route_params += "waypoint" + str(count - 1) + "=geo!" + str(stop_coords[str(count - 1)][0]) + "," + \
+                            str(stop_coords[str(count - 1)][1])
             response = requests.get(
                 'https://route.api.here.com/routing/7.2/calculateroute.json?{0}&mode=balanced;publicTransport;traffic:disabled&routeattributes=none,sh&&app_id={1}&app_code={2}'.format(
                     route_params, osm_app_id, osm_api_key))

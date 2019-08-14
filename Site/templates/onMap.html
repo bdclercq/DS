@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-
     {% if times %}
         <div class="row">
             <div class="col" style="overflow-y: scroll; height:600px;">
@@ -18,10 +17,10 @@
             <div class="col">
                 <div id='map' style='width: 600px; height: 500px;'></div>
                 <script>
-                    var platform = new H.service.Platform({
-                        app_id: 'lLhrUyfFEtsQcqQygfnX',     //set your app_id
-                        app_code: 'XpBpGZrvaawH8C_H6N0KEQ',   //set your app_code
-                        useCIT: true         //configure all services to use the 'CIT' environment
+
+                    var vehicle_icon = L.icon({
+                        iconUrl: 'static/img/vehicle.ico',
+                        iconSize: [25, 25]
                     });
 
                     var map = L.map('map', {
@@ -38,10 +37,16 @@
                         L.map.zoom = 15;
                     };
 
+                    var vehicle_layer = L.layerGroup();
+
                     var markers = {};
                     var count = 0;
+                    var vCount = 0;
                     {% for time in times %}
                         // count ++;
+                        if (vCount < {{ time.time|length }}) {
+                            vCount = {{ time.time|length }};
+                        }
                         markers[count] = L.marker([{{ time.lati }}, {{ time.longi }}]).addTo(map);
                         markers[count].bindPopup("<b>{{time.name}}</b><br>{{ time.time }}<br>" +
                             "{{ time.weather }}<br>{{ time.temp }} °C").openPopup();
@@ -59,7 +64,48 @@
                         smoothFactor: 1
                     });
                     firstpolyline.addTo(map);
-                    {#                    centerMap(lat / count, lon / count);#}
+
+
+                    (function () {
+                        map.removeLayer(vehicle_layer);
+                        vehicle_layer.clearLayers();
+
+                        {% for i in range(times[0].time|length) %}
+                            var date = new Date();
+                            var timestamp = date.getTime();
+                            var first_passing = new Date(date.getFullYear(), date.getMonth(), date.getDate(), {{ times[0].time[i][:2] }}, {{ times[0].time[i][3:5] }}, {{ times[0].time[i][6:] }});
+                            {#first_passing = {{ time.time }};#}
+                            var difference1_ms = (timestamp - first_passing.getTime());
+                            var last_passing = new Date(date.getFullYear(), date.getMonth(), date.getDate(), {{ times[times|length-1].time[i][:2] }}, {{ times[times|length-1].time[i][3:5] }}, {{ times[times|length-1].time[i][6:] }});
+                            {# If the vehicle hasn't passed the last stop: find out where it is#}
+                            if (last_passing.getTime() - timestamp > 0) {
+                                var difference2_ms = (last_passing.getTime() - first_passing.getTime());
+                                var progress = (difference1_ms) / (difference2_ms);
+
+                                {#    Vehicle is located at round({{ routes|length }}*progress) #}
+                                var routelen = 0;
+                                routelen = {{ routes|length }};
+                                var index = Math.round(routelen * progress);
+                                var route = [{{ times[0].lati }}, {{ times[0].longi }}];
+                                var r_counter = 0;
+                                {% for route in routes %}
+                                    if (r_counter === index) {
+                                        route = new L.LatLng({{route[0]}}, {{route[1]}});
+                                        r_counter = r_counter + 1;
+                                    }
+                                    r_counter = r_counter + 1;
+                                {% endfor %}
+                                var vehicle_marker = L.marker(route, {'icon': vehicle_icon}).addTo(vehicle_layer);
+                                vehicle_marker.bindPopup("<b>BEEPBEEP</b>");
+                                map.addLayer(vehicle_layer);
+                            }
+
+                            setTimeout(arguments.callee, 5000);
+                        {% endfor %}
+
+                    })
+                    ();
+
                 </script>
             </div>
         </div>

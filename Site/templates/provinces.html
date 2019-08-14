@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
+    <h1>Select your province</h1><br>
+    <a>Please select the province you are currently traveling (or will be traveling) from the list below.</a><br><br>
     {% if provs %}
-    {% for prov in provs %}
-        <a href="/lines/{{ prov['entiteitnummer'] }}">{{ prov['omschrijving'] }}</a> <br>
-    {% endfor %}
+        {% for prov in provs %}
+            <a href="/lines/{{ prov['entiteitnummer'] }}">{{ prov['omschrijving'] }}</a> <br>
+        {% endfor %}
 
     {% else %}
-    <h1>Oops, something went wrong</h1>
+        <h1>Oops, something went wrong</h1>
     {% endif %}
 {% endblock %}
