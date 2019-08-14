@@ -6,7 +6,9 @@ import requests
 @site.route('/')
 @site.route('/<name>')
 def home(name=None):
-    return render_template('home.html', name=name)
+    provs = requests.get('http://localhost:5000/get_provinces')
+    provs = provs.json()
+    return render_template('home.html', name=name, provs=provs['data']['provinces'])
 
 
 @site.route('/provinces', methods=['POST', 'GET'])
@@ -30,8 +32,22 @@ def lines(province):
 
 
 @site.route('/timetable/<province>/<line>/to', methods=['POST', 'GET'])
-def timetable(province, line):
+def timetable_to(province, line):
     timetable = requests.get('http://localhost:5000/get_timetable/{0}/{1}/to'.format(province, line))
+    timetable = timetable.json()
+    # routes = requests.get('http://localhost:5000/get_routes/{0}'.format(timetable['data']['stops'])).json()
+    # print(routes)
+    if timetable['status'] == 'success':
+        # print(timetable['data']['stops'])
+        # print(timetable['data']['routes'])
+        return render_template('onMap.html', times=timetable['data']['stops'], routes=timetable['data']['routes'])
+    else:
+        return render_template('errors.html', mess=timetable['message'])
+
+
+@site.route('/timetable/<province>/<line>/from', methods=['POST', 'GET'])
+def timetable_from(province, line):
+    timetable = requests.get('http://localhost:5000/get_timetable/{0}/{1}/from'.format(province, line))
     timetable = timetable.json()
     # routes = requests.get('http://localhost:5000/get_routes/{0}'.format(timetable['data']['stops'])).json()
     # print(routes)

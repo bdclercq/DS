@@ -7,4 +7,10 @@
     {% if mess %}
         <h1>{{ mess }}</h1>
     {% endif %}
+    {% if provs %}
+        <a>Please select the province you are currently traveling (or will be traveling) from the list below.</a><br><br>
+        {% for prov in provs %}
+            <a href="/lines/{{ prov['entiteitnummer'] }}">{{ prov['omschrijving'] }}</a> <br>
+        {% endfor %}
+    {% endif %}
 {% endblock %}
