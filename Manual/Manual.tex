@@ -71,7 +71,7 @@
 In order to run the app, the user needs to execute the \emph{run.sh} script on Mac/Linux or the \emph{run.bat} script on Windows.
 
 \subsection{Usage}
-
+The app is very easy to use: you just start with a province and follow the instructions.
 
 \newpage
 
@@ -129,6 +129,8 @@ API call:
 \begin{lstlisting}[style=DOS]
 /get_provinces
 \end{lstlisting}
+Name: /get\_provinces/\\
+Arguments: none.\\
 Return value: a JSON format response object as shown above.
 \newpage
 
@@ -166,6 +168,8 @@ API call:
 \begin{lstlisting}[style=DOS]
 /get_lines/<province>
 \end{lstlisting}
+Name: /get\_lines/$<$province$>$\\
+Argument: the number of a province.\\
 Return value: a JSON format response object as (shortened) shown above. This object describes the available lines for the given province.
 \newpage
 
@@ -207,6 +211,8 @@ API calls:
 /get_timetable/<province>/<line>/to/
 /get_timetable/<province>/<line>/from/
 \end{lstlisting}
+Name: /get\_timetable/$<$province$>$/$<$line$>$/[to$|$from]\\
+Arguments: the number of a province, a line number and a direction.\\
 Return value: a JSON format response object as (shortened) shown above. This object describes the stops on the line and provides passing times, weather information and coordinates for the route that will be followed. 
 
 \subsection{Other calls}
@@ -261,9 +267,8 @@ Once a direction has been chosen, everything will be processed and  the user wil
 
 \section{Design choices}
 I decided to split the application in 2 parts: one part which contains all API calls and one which contains all site links. This way, either part can be used without needing the exact other.\\
-As for the naming of API calls/site links, I chose to name them according to what they represent. After all, a link like `/provinces/$<$province$>$/lines/$<$line$>$/$<$direction$>$' wouldn't really give the user any indication as to what will be given
-
-\newpage
+Another choice I made was to name the API calls for what they return (since this is the most logical thing to do). As for the site links, I wanted to make them `hackable' in a way: they all start from the same point (/provinces) and are then incrementally build up until the final page is reached. \\
+One final choice I made was to split up the route in a `to' and `from' direction: I noticed that getting all the required data can take some time, and since people (mostly) only need immediate info for one direction, I decided to split things up.
 
 \section{Tools used}
 \begin{itemize}

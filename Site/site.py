@@ -3,6 +3,20 @@ from flask import render_template
 import requests
 
 
+@site.app_errorhandler(404)
+# inbuilt function which takes error as parameter
+def not_found(e):
+    # defining function
+    return render_template("errors.html"), 404
+
+
+@site.app_errorhandler(500)
+# inbuilt function which takes error as parameter
+def not_found(e):
+    # defining function
+    return render_template("500.html"), 500
+
+
 @site.route('/')
 @site.route('/<name>')
 def home(name=None):
